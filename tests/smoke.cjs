@@ -92,6 +92,7 @@ check("#/lesson/llm-security", "lesson: llmsec");
 check("#/lesson/quantum-crypto", "lesson: qkd");
 check("#/lesson/steganography", "lesson: stego");
 check("#/lesson/supply-chain", "lesson: supply");
+check("#/lesson/hsts-ct", "lesson: hsts-ct");
 check("#/lesson/storing-secrets", "lesson: secrets");
 check("#/lesson/csrf-samesite", "lesson: csrf");
 check("#/lesson/clickjacking", "lesson: clickjacking");
@@ -152,6 +153,12 @@ try {
   console.log("secret scan:", leaky.length, "hits on leaky,", clean.length, "on clean");
   if (leaky.length !== 3 || clean.length !== 0) errors.push("secretscan: expected 3 hits on leaky sample and 0 on clean");
 } catch (e) { errors.push("secretscan exercise: " + e.message); }
+
+// every lesson shows a "last verified" badge
+for (const id of Object.values(window.BULWARK.order).flat()) {
+  window.location.hash = "#/lesson/" + id; window.dispatchEvent(new window.Event("hashchange"));
+  if (!window.document.querySelector(".verified-badge")) errors.push(id + ": missing last-verified badge");
+}
 
 // home path map: one stop per lesson
 {

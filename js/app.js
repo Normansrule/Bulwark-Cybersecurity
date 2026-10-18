@@ -216,6 +216,12 @@
     head.append(h("h1", null, l.title), h("p", "lesson-sub", l.subtitle));
     const meta = h("div", "lesson-meta");
     meta.append(h("span", null, era ? era.num + " · " + era.title : ""), h("span", null, "~" + l.minutes + " min"));
+    if (l.verified) {
+      const ageDays = Math.floor((Date.now() - Date.parse(l.verified)) / 864e5);
+      const badge = h("span", "verified-badge" + (ageDays > 180 ? " stale" : ""), "✓ last verified " + l.verified);
+      badge.title = ageDays > 180 ? "Over six months since this lesson was re-checked; facts may have moved." : "Claims and sources in this lesson were checked on this date.";
+      meta.append(badge);
+    }
     head.append(meta);
     wrap.append(head);
 

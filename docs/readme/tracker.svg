@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 504" width="1200" height="504" role="img" aria-label="Progress tracker: 48% overall">
+<style>
+  .h{font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;fill:#9aa7b8;letter-spacing:.12em}
+  .big{font-family:Fraunces,Georgia,'Times New Roman',serif;font-size:40px;fill:#d59a45}
+  .an{font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;fill:#e8e4da}
+  .hostt{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;fill:#d97059}
+  .pc{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15px;font-weight:600}
+  .lb{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;fill:#9aa7b8}
+  .bar{transform-box:fill-box;transform-origin:left;transform:scaleX(0);animation:grow 1.4s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes grow{to{transform:scaleX(1)}}
+  .shine{opacity:.0;animation:shine 2.6s ease-in-out infinite 1.6s}
+  @keyframes shine{0%,100%{opacity:0}50%{opacity:.55}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+  @media (prefers-reduced-motion: reduce){.bar{transform:none}}
+</style>
+<defs><linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".85" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<rect width="1200" height="504" rx="18" fill="#0f1b2d"/>
+<text x="60" y="44" class="h">PROGRESS TRACKER · GENERATED FROM THE REPO</text>
+<text x="60" y="80" class="big">48% of the way to the full vision</text>
+<g transform="translate(0 96)">
+      <text x="60" y="22" class="an">Curriculum (lessons)</text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="378.0" height="18" rx="9" fill="#d59a45" class="bar" style="animation-delay:0.00s"/>
+      <rect x="400" y="8" width="378.0" height="18" rx="9" fill="url(#shine)" class="shine" style="animation-delay:0.00s"/>
+      <text x="984" y="23" class="pc" style="fill:#d59a45">68%</text>
+      <text x="1042" y="23" class="lb">27 / 40 lessons</text></g><g transform="translate(0 150)">
+      <text x="60" y="22" class="an">Interactive widgets</text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="476.0" height="18" rx="9" fill="#d59a45" class="bar" style="animation-delay:0.15s"/>
+      <rect x="400" y="8" width="476.0" height="18" rx="9" fill="url(#shine)" class="shine" style="animation-delay:0.15s"/>
+      <text x="984" y="23" class="pc" style="fill:#d59a45">85%</text>
+      <text x="1042" y="23" class="lb">34 / 40 widgets</text></g><g transform="translate(0 204)">
+      <text x="60" y="22" class="an">CTF challenges</text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="354.7" height="18" rx="9" fill="#d59a45" class="bar" style="animation-delay:0.30s"/>
+      <rect x="400" y="8" width="354.7" height="18" rx="9" fill="url(#shine)" class="shine" style="animation-delay:0.30s"/>
+      <text x="984" y="23" class="pc" style="fill:#d59a45">63%</text>
+      <text x="1042" y="23" class="lb">19 / 30 challenges</text></g><g transform="translate(0 258)">
+      <text x="60" y="22" class="an">Docs, CI &amp; supply chain</text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="560.0" height="18" rx="9" fill="#46b3a2" class="bar" style="animation-delay:0.45s"/>
+      
+      <text x="984" y="23" class="pc" style="fill:#46b3a2">100%</text>
+      <text x="1042" y="23" class="lb">7 / 7 steps</text></g><g transform="translate(0 312)">
+      <text x="60" y="22" class="an">Public launch</text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="0.0" height="18" rx="9" fill="#d59a45" class="bar" style="animation-delay:0.60s"/>
+      
+      <text x="984" y="23" class="pc" style="fill:#d59a45">0%</text>
+      <text x="1042" y="23" class="lb">0 / 4 steps</text></g><g transform="translate(0 366)">
+      <text x="60" y="22" class="an">Sandboxed lab runner <tspan class="hostt">needs a host</tspan></text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="112.0" height="18" rx="9" fill="#d97059" class="bar" style="animation-delay:0.75s"/>
+      <rect x="400" y="8" width="112.0" height="18" rx="9" fill="url(#shine)" class="shine" style="animation-delay:0.75s"/>
+      <text x="984" y="23" class="pc" style="fill:#d97059">20%</text>
+      <text x="1042" y="23" class="lb">1 / 5 steps</text></g><g transform="translate(0 420)">
+      <text x="60" y="22" class="an">Desktop app <tspan class="hostt">needs a host</tspan></text>
+      <rect x="400" y="8" width="560" height="18" rx="9" fill="#26374f"/>
+      <rect x="400" y="8" width="0.0" height="18" rx="9" fill="#d97059" class="bar" style="animation-delay:0.90s"/>
+      
+      <text x="984" y="23" class="pc" style="fill:#d97059">0%</text>
+      <text x="1042" y="23" class="lb">0 / 4 steps</text></g>
+</svg>

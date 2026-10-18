@@ -17,6 +17,9 @@
  *   {t:'table',head:[], rows:[[md]]}   table
  *   {t:'quote',md, cite}               pull quote
  *   {t:'widget',id}                    mount an interactive widget by id
+ *
+ * Each lesson also carries `verified`: the date its claims and cited sources
+ * were last checked. It's shown as a badge; re-check and bump it on review.
  */
 window.BULWARK = (function () {
   "use strict";
@@ -39,6 +42,7 @@ window.BULWARK = (function () {
       title: "Classical ciphers, and how they broke",
       subtitle: "Caesar to Vigenère — and the single idea that defeats them all.",
       minutes: 12,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "A **cipher** turns readable text (the *plaintext*) into scrambled text (the *ciphertext*) using a rule and a secret *key*. Decryption reverses it. The oldest ciphers hid the *rule*; every one of them fell. The lasting lesson is the opposite instinct — keep the rule public and the key secret." },
         { t: "note", kind: "history", md: "The **Caesar cipher** (1st century BCE) shifts every letter a fixed number of places: with a shift of 3, `A→D`, `B→E`. There are only 25 useful shifts, so an attacker just tries them all — a *brute-force* attack the size of a coffee break." },
@@ -73,6 +77,7 @@ window.BULWARK = (function () {
       title: "The CIA triad and the shape of defense",
       subtitle: "Three properties, and the habits that protect them.",
       minutes: 9,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Before any tool or attack, security has a vocabulary. Almost everything reduces to protecting three properties of information, known as the **CIA triad** — no relation to the agency." },
         { t: "table",
@@ -101,6 +106,7 @@ window.BULWARK = (function () {
       title: "Hashing and the avalanche effect",
       subtitle: "A one-way fingerprint for data — and why one changed bit changes everything.",
       minutes: 11,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "A **cryptographic hash function** takes any input and returns a fixed-size fingerprint (a *digest*). SHA-256 always returns 256 bits, whether you feed it one letter or a movie. It's the workhorse behind password storage, file-integrity checks, digital signatures, and blockchains." },
         { t: "h", text: "The three properties that make it cryptographic" },
@@ -137,6 +143,7 @@ window.BULWARK = (function () {
       title: "Injection: when data becomes code",
       subtitle: "The single idea behind SQL injection and Cross-Site Scripting — and how to end it.",
       minutes: 14,
+      verified: "2026-09-30",
       body: [
         { t: "note", kind: "attack", md: "**Everything on this page runs against a fake target built into the page** — an in-memory array for the database, a sandboxed `iframe` for the browser. Nothing here can reach another machine. That's the same rule the full labs enforce: you only ever attack something you started." },
         { t: "p", md: "**Broken Access Control** tops the OWASP Top 10, but **injection** is the most instructive class, because it's one idea wearing many costumes: *untrusted input gets interpreted as code or structure instead of staying data.* Fix the boundary and the whole family disappears." },
@@ -166,6 +173,7 @@ window.BULWARK = (function () {
       title: "Availability under attack: DDoS, defensively",
       subtitle: "How denial-of-service works, and how a service is built to withstand it.",
       minutes: 10,
+      verified: "2026-09-30",
       body: [
         { t: "note", kind: "attack", md: "**This lesson generates no traffic.** It is a concept visualizer and a defense guide. Bulwark ships no load or stress tool, no list of amplifiers, and no attack code — attacking a system you don't own is a crime, and the tool makes it impossible, not merely discouraged. See [the ethics policy](docs/ETHICS.md)." },
         { t: "p", md: "A **Denial-of-Service** attack goes after the *availability* leg of the CIA triad: make a service unusable rather than steal from it. **Distributed** means the traffic comes from many sources at once — which is the whole reason it's hard to block, and the reason botnets exist." },
@@ -202,6 +210,7 @@ window.BULWARK = (function () {
       title: "Public-key cryptography",
       subtitle: "How two strangers agree on a secret in the open — and sign things nobody can forge.",
       minutes: 15,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Symmetric ciphers like AES are fast, but they need both sides to already share a key. That's the chicken-and-egg problem public-key cryptography solves: a **key pair** where one key is public and one is private, linked by a math problem that's easy one way and infeasible to reverse." },
         { t: "h", text: "Diffie–Hellman: a shared secret over an open wire" },
@@ -232,6 +241,7 @@ window.BULWARK = (function () {
       title: "TLS 1.3: how a secure connection is built",
       subtitle: "Where key exchange, certificates, hashing, and symmetric crypto all come together.",
       minutes: 10,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Every `https://` request rides on Transport Layer Security. TLS 1.3 composes the pieces from the last three lessons: an ephemeral **Diffie–Hellman** exchange for the keys, a **certificate** and signature for identity, a **hash-based** check for integrity, and fast **symmetric** encryption for the data. It does the whole setup in a single round trip." },
         { t: "widget", id: "tls" },
@@ -252,6 +262,7 @@ window.BULWARK = (function () {
       title: "The OWASP Top 10 (2025)",
       subtitle: "The industry's shared shortlist of what actually goes wrong in web apps.",
       minutes: 9,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "The Open Worldwide Application Security Project (OWASP) publishes a data-driven ranking of the most serious web-application risks. The **2025** edition, released 2025-11-06, is the current one. It's not a checklist to pass — it's a map of where real breaches come from, so you know where to spend attention." },
         { t: "widget", id: "owasp" },
@@ -265,6 +276,7 @@ window.BULWARK = (function () {
       title: "Authentication: passwords, entropy, and passkeys",
       subtitle: "Proving who you are — and why length beats punctuation.",
       minutes: 12,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "**Authentication** proves *who you are*; **authorization** decides *what you may do* (that's the A01 access-control risk from the last lesson). This lesson is about the first one, starting with the weakest common form: the password." },
         { t: "h", text: "Entropy: measuring guessing resistance" },
@@ -296,6 +308,7 @@ window.BULWARK = (function () {
       title: "The post-quantum frontier",
       subtitle: "Which of today's cryptography a large quantum computer would break — and what replaces it.",
       minutes: 11,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "A sufficiently large quantum computer would not break all cryptography — it would break a specific, load-bearing part of it. Knowing exactly which part is the difference between panic and a migration plan." },
         { t: "widget", id: "pqc" },
@@ -323,6 +336,7 @@ window.BULWARK = (function () {
       title: "Threat modeling: finding the flaws before you build",
       subtitle: "Four questions, the STRIDE checklist, and where trust actually breaks.",
       minutes: 11,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "The cheapest bug to fix is the one you catch on a whiteboard. **Threat modeling** is the habit of asking, before writing code, where a system could be attacked — and it comes down to four questions (Adam Shostack's framing): *What are we building? What can go wrong? What are we going to do about it? Did we do a good job?*" },
         { t: "h", text: "STRIDE: a checklist for “what can go wrong”" },
@@ -351,6 +365,7 @@ window.BULWARK = (function () {
       title: "Detection and response: assume breach",
       subtitle: "Prevention is never perfect, so the second job is seeing it and recovering.",
       minutes: 11,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Every control on this site can fail or be bypassed. Mature security **assumes breach** and invests in the other half: noticing quickly and recovering cleanly. A breach that's caught in minutes is an incident; one caught in months is a headline." },
         { t: "h", text: "Logging and alerting" },
@@ -376,6 +391,7 @@ window.BULWARK = (function () {
       title: "Zero trust and confidential computing",
       subtitle: "Dropping the idea of a safe inside — and protecting data even while it's in use.",
       minutes: 8,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "The old model was a **perimeter**: a hard shell (the firewall) around a soft, trusted interior. Once inside, you were trusted. Cloud, remote work, and breaches that pivot laterally (the ATT&CK lesson) killed that assumption. The replacement is **zero trust**: never trust, always verify — every request is authenticated and authorized on its own merits, wherever it comes from." },
         { t: "list", items: [
@@ -395,6 +411,7 @@ window.BULWARK = (function () {
       title: "Tokens, sessions, and OAuth",
       subtitle: "How modern apps stay logged in and let you “sign in with…” without sharing passwords.",
       minutes: 13,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Once you've authenticated (the last lesson), the app needs to *remember* it across requests without asking for your password each time. Two ideas dominate today: signed **tokens** and delegated authorization with **OAuth**." },
         { t: "h", text: "JSON Web Tokens" },
@@ -413,6 +430,7 @@ window.BULWARK = (function () {
       title: "Securing AI systems",
       subtitle: "The newest attack surface: large language models, and the OWASP LLM Top 10.",
       minutes: 12,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Applications built on large language models (LLMs) inherit every classic web risk *and* add new ones. OWASP now maintains a dedicated **Top 10 for LLM Applications**, and the risk at #1 is unlike anything in the web list: prompt injection." },
         { t: "h", text: "Prompt injection (LLM01)" },
@@ -444,6 +462,7 @@ window.BULWARK = (function () {
       title: "Quantum cryptography",
       subtitle: "Using the laws of physics — not just hard math — to share a key an eavesdropper can't take unseen.",
       minutes: 12,
+      verified: "2026-09-30",
       body: [
         { t: "note", kind: "info", md: "**Two different “quantum” stories, don't mix them up.** *Post-quantum cryptography* (last lesson) is ordinary math run on classical computers, chosen because it resists quantum attacks. *Quantum key distribution* (this lesson) uses actual quantum hardware to move a key. PQC is deploying everywhere now; QKD is niche. They solve overlapping problems in opposite ways." },
         { t: "p", md: "The magic ingredient is the **no-cloning theorem**: an unknown quantum state cannot be copied, and *measuring* it disturbs it. So if a key is encoded in single photons, an eavesdropper who intercepts them can't copy them and can't measure them without leaving fingerprints. Detection, built into physics." },
@@ -465,6 +484,7 @@ window.BULWARK = (function () {
       title: "Steganography: hiding in plain sight",
       subtitle: "Concealing that a message even exists — and why that isn't the same as protecting it.",
       minutes: 8,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "Cryptography scrambles a message so it can't be *read*. **Steganography** hides the fact that a message is *there at all* — invisible ink, microdots, a note tucked inside an image. The two solve different problems, and the strongest approach uses both." },
         { t: "h", text: "The least-significant-bit trick" },
@@ -481,6 +501,7 @@ window.BULWARK = (function () {
       title: "Software supply-chain security",
       subtitle: "Most of your app is other people's code. OWASP A03 is about trusting it wisely.",
       minutes: 11,
+      verified: "2026-09-30",
       body: [
         { t: "p", md: "A modern application is mostly dependencies — hundreds of packages you didn't write, pulling in hundreds more. **Software Supply Chain Failures** is new at #3 in the OWASP Top 10:2025 because attackers noticed: why breach one app when you can compromise a package a thousand apps import?" },
         { t: "h", text: "How the attacks work" },
@@ -505,6 +526,7 @@ window.BULWARK = (function () {
       title: "Storing secrets so a breach isn't a catastrophe",
       subtitle: "Password hashing, envelope encryption, KMS and HSMs, secret managers, rotation, and keeping keys out of git.",
       minutes: 18,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "Every system holds things an adversary wants: user passwords, database credentials, API keys, signing keys, customer records. The working assumption of real-world secret storage is **assume the database will leak someday**. The question is what the attacker can do with the copy. Done well, the answer is *very little*." },
         { t: "table",
@@ -586,6 +608,7 @@ window.BULWARK = (function () {
       title: "Cross-site request forgery and SameSite cookies",
       subtitle: "When your browser helpfully attaches your login to someone else's request.",
       minutes: 9,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "Browsers attach cookies to requests based on **where the request is going**, not **which page started it**. **Cross-Site Request Forgery (CSRF)** abuses that: a page on another site causes your browser to send a state-changing request to a site where you're logged in, and your session cookie rides along." },
         { t: "widget", id: "walkthrough", data: {
@@ -621,6 +644,7 @@ window.BULWARK = (function () {
       title: "Clickjacking and frame-ancestors",
       subtitle: "A real button, hidden under a fake one.",
       minutes: 7,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "**Clickjacking** (UI redressing) loads a real site invisibly inside a frame and lines up one of its buttons under something enticing. You think you're clicking \"Play\"; you're clicking \"Delete account\" on a site where you're logged in." },
         { t: "widget", id: "walkthrough", data: {
@@ -647,6 +671,7 @@ window.BULWARK = (function () {
       title: "API security: every endpoint is a front door",
       subtitle: "The OWASP API Security Top 10, and the handful of controls that cover most of it.",
       minutes: 14,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "Modern apps are mostly APIs: the mobile app, the single-page front end and partner integrations all talk to JSON endpoints. APIs fail differently from classic web pages, because the client is fully under the user's control. Anyone can call any endpoint with any ID, any field and any rate. The server is the only place a rule can live." },
         { t: "table",
@@ -687,6 +712,7 @@ window.BULWARK = (function () {
       title: "Automated and AI pentesters: testing your own app",
       subtitle: "What tools like Shannon look for, and how to put them to work on your side.",
       minutes: 10,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "A new class of tools runs penetration tests autonomously. [Shannon](https://github.com/KeygraphHQ/shannon), an open-source AI pentester, reads an application's source code, maps its trust boundaries and data flows, then drives a browser and command-line tools against a **running copy of the app you own** to confirm findings with proof. Its documented focus is the OWASP classes this track covers: injection, XSS, SSRF, broken authentication and broken authorization." },
         { t: "note", kind: "attack", md: "**Authorization is the whole difference between a test and a crime.** Tools like this mutate state: they create users, submit forms and trigger outbound requests. Their own documentation says to run them only against systems you own or are explicitly authorized to test, in staging or local environments with disposable data. Bulwark doesn't bundle or drive any such tool." },
@@ -717,6 +743,7 @@ window.BULWARK = (function () {
       title: "Session fixation and open redirects",
       subtitle: "Two small mistakes in login flows, and the one-line habits that prevent them.",
       minutes: 9,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "After you log in, a **session ID** in a cookie is your identity. Two classic bugs abuse the moments around login: letting someone else choose your session ID before you log in (**session fixation**), and letting a link choose where the site sends you afterwards (**open redirect**)." },
         { t: "h", text: "Session fixation" },
@@ -758,6 +785,7 @@ window.BULWARK = (function () {
       title: "Port scanning and attack surface",
       subtitle: "What an internet-wide scan sees of your server, and how to make it see almost nothing.",
       minutes: 10,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "Every service listening on a network port is a door. **Port scanning** is the act of knocking on many doors to see which answer, and it happens to every internet-facing address, constantly, from researchers and criminals alike. You can't stop being scanned; you can control what the scan finds." },
         { t: "table",
@@ -789,6 +817,7 @@ window.BULWARK = (function () {
       title: "Secure code review: find it before an attacker does",
       subtitle: "Six short server snippets. Click the flawed line, then choose the fix.",
       minutes: 12,
+      verified: "2026-10-18",
       body: [
         { t: "p", md: "Code review is the cheapest place to stop a vulnerability: no exploit, no incident, just a comment on a pull request. Reviewers who know the common shapes of security bugs catch them in seconds. Each snippet below has **one** line that creates a vulnerability from earlier lessons. Find it, then pick the fix a senior reviewer would ask for." },
         { t: "widget", id: "codereview", data: [
@@ -826,6 +855,63 @@ window.BULWARK = (function () {
         { t: "note", kind: "defend", md: "**Make the review systematic.** A short checklist on every pull request that touches a route: *Who may call this? Which object, which fields? Is input bound as data? Where do secrets come from? What can this make the server fetch?* Static analysis (this repo runs CodeQL) catches some of these automatically; the authorization questions still need a human." }
       ]
     }
+,
+    "hsts-ct": {
+      era: "live",
+      title: "HSTS and Certificate Transparency",
+      subtitle: "Closing the gap before HTTPS starts, and catching certificates that should never have existed.",
+      minutes: 11,
+      verified: "2026-10-18",
+      body: [
+        { t: "p", md: "TLS protects a connection once it exists. Two gaps remain: the moment *before* a browser decides to use HTTPS, and the possibility that a Certificate Authority (CA) issues a valid-looking certificate for your domain to someone else. **HTTP Strict Transport Security (HSTS)** closes the first. **Certificate Transparency (CT)** makes the second visible." },
+        { t: "h", text: "The first gap: the plain-HTTP moment" },
+        { t: "widget", id: "walkthrough", data: {
+          title: "Downgraded on café Wi-Fi",
+          attack: [
+            { who: "victim", say: "You type bank.example into the address bar. With no scheme given, the browser's first request goes out over plain HTTP, expecting a redirect to HTTPS.", screen: { kind: "request", lines: ["GET / HTTP/1.1", "Host: bank.example", "(unencrypted)"], hl: "(unencrypted)" } },
+            { who: "attacker", say: "Someone controlling the café network intercepts that unencrypted request. They talk HTTPS to the bank themselves, but keep talking plain HTTP to you, rewriting https:// links to http://. This is \"SSL stripping\", demonstrated publicly in 2009.", screen: { kind: "code", title: "the network in the middle", lines: ["you  ⇄  café router (HTTP, readable)", "café router  ⇄  bank (HTTPS)"], hl: "HTTP, readable" } },
+            { who: "victim", say: "The page looks normal; only the missing padlock gives it away. Your login travels in the clear.", screen: { kind: "browser", url: "http://bank.example/login", lines: ["Sign in", "(no padlock)"], hl: "http://" } }
+          ],
+          defend: [
+            { who: "defender", label: "HSTS header", say: "Over HTTPS, the bank sends Strict-Transport-Security. From then on, for max-age seconds, the browser rewrites every bank.example request to HTTPS itself, before anything touches the network, and refuses to click through certificate errors.", screen: { kind: "response", title: "response header", lines: ["Strict-Transport-Security: max-age=63072000; includeSubDomains"], hl: "max-age=63072000" } },
+            { who: "defender", label: "Preload list", say: "HSTS only helps after a first secure visit. Submitting the domain to the browsers' preload list ships the rule inside the browser, so even the very first visit is HTTPS.", screen: { kind: "response", title: "preload-eligible header", lines: ["Strict-Transport-Security: max-age=31536000; includeSubDomains; preload"], hl: "preload" } },
+            { who: "victim", say: "The café network never sees a plain-HTTP request to strip.", screen: { kind: "browser", url: "https://bank.example/login", lines: ["Sign in", "🔒 connection secure"] } }
+          ] } },
+        { t: "list", items: [
+          "Browsers **ignore** an HSTS header received over plain HTTP (RFC 6797 §8.1), so a network attacker can't plant or remove it.",
+          "Roll out gradually: start with a short `max-age` (a day), confirm every subdomain serves HTTPS, then raise it to one or two years.",
+          "**Preloading is hard to undo**; the preload list requires `max-age` of at least one year, `includeSubDomains`, and `preload`, plus an HTTP→HTTPS redirect.",
+          "GitHub Pages serves `*.github.io` sites over HTTPS, so a Bulwark deployment there starts from a secure default; a custom domain needs its own HSTS header."
+        ]},
+        { t: "h", text: "The second gap: a certificate for your domain you didn't ask for" },
+        { t: "widget", id: "walkthrough", data: {
+          title: "A rogue certificate, and how CT exposes it",
+          attack: [
+            { who: "attacker", say: "An attacker breaks into a Certificate Authority's systems and issues themselves a certificate for a big site. This really happened: in 2011 the DigiNotar CA issued a fraudulent *.google.com certificate.", screen: { kind: "code", title: "certificate", lines: ["Subject: *.google.com", "Issuer: DigiNotar Public CA 2025", "Signature: valid ✓"], hl: "valid ✓" } },
+            { who: "browser", say: "Because the CA was trusted, browsers accepted the certificate. It was used to intercept connections, mostly from users in Iran.", screen: { kind: "browser", url: "https://mail.google.com", lines: ["🔒 connection secure  (it wasn't)"] } },
+            { who: "victim", say: "Nothing on screen looked wrong. The certificate was valid, just issued to the wrong party, and nobody but the attacker knew it existed.", screen: { kind: "terminal", lines: ["who knew the certificate existed: the attacker"], hl: "the attacker" } }
+          ],
+          defend: [
+            { who: "defender", label: "CT logs", say: "Today, every publicly trusted certificate must be recorded in public, append-only Certificate Transparency logs. Chrome and Apple platforms refuse certificates that don't carry proof of logging (Signed Certificate Timestamps).", screen: { kind: "code", title: "certificate", lines: ["Subject: shop.example", "SCTs: 3 (from 2+ independent log operators)"], hl: "SCTs" } },
+            { who: "defender", label: "Monitoring", say: "Because the logs are public, a domain owner can watch them. Monitors (crt.sh is one public search) alert you within hours to any certificate issued for your names.", screen: { kind: "terminal", lines: ["ALERT new certificate for shop.example", "issuer: Unknown CA Ltd · not in our inventory · revoke + investigate"], hl: "not in our inventory" } },
+            { who: "defender", label: "CAA record", say: "A DNS CAA record also tells every CA which ones may issue for your domain; CAs must check it before issuing.", screen: { kind: "response", title: "DNS record", lines: ["shop.example.  CAA 0 issue \"letsencrypt.org\""] } }
+          ] } },
+        { t: "table",
+          head: ["Control", "Stops", "Where it lives"],
+          rows: [
+            ["**HSTS** (+ preload)", "SSL stripping, clicking through certificate warnings", "an HTTP response header; the browser's built-in preload list"],
+            ["**Certificate Transparency**", "mis-issued certificates going unnoticed", "public logs (RFC 6962), enforced by Chrome and Apple"],
+            ["**CT monitoring**", "slow discovery of a rogue certificate", "your alerting, fed by log monitors"],
+            ["**CAA**", "unauthorized CAs issuing in the first place", "a DNS record (RFC 8659)"]
+          ] },
+        { t: "note", kind: "info", md: "**Which CT version?** Browsers enforce CT as specified in RFC 6962. RFC 9162 (\"CT 2.0\") exists but is an Experimental successor that browsers don't require. Exact SCT-count rules change over time, so read the current Chrome and Apple policy pages rather than memorizing numbers." },
+        { t: "widget", id: "quiz", data: [
+          { q: "Why does HSTS need a first secure visit (unless preloaded)?", choices: ["The header is only honored when received over HTTPS", "It's too large for HTTP", "HTTP has no headers", "It requires a cookie"], answer: 0, explain: "A browser ignores HSTS headers sent over plain HTTP, otherwise an attacker could set or strip them." },
+          { q: "What does Certificate Transparency actually provide?", choices: ["Encryption of certificates", "A public, append-only record of every issued certificate, so mis-issuance can be detected", "Faster TLS handshakes", "Free certificates"], answer: 1, explain: "CT doesn't prevent issuance; it makes every certificate visible so domain owners can spot ones they didn't request." },
+          { q: "Which record limits which CAs may issue for your domain?", choices: ["MX", "CAA", "TXT SPF", "AAAA"], answer: 1, explain: "CAA (RFC 8659) lists the CAs allowed to issue; CAs must check it." }
+        ]}
+      ]
+    }
 
   };
 
@@ -833,7 +919,7 @@ window.BULWARK = (function () {
   const order = {
     foundations: ["classical-ciphers", "steganography"],
     core: ["cia-triad", "threat-modeling"],
-    live: ["hashing", "public-key", "tls-handshake"],
+    live: ["hashing", "public-key", "tls-handshake", "hsts-ct"],
     applied: ["injection", "csrf-samesite", "clickjacking", "session-attacks", "owasp-top10", "passwords-auth", "storing-secrets", "tokens-oauth", "llm-security", "supply-chain"],
     api: ["api-security", "secure-code-review", "automated-pentesting"],
     detection: ["network-exposure", "availability-ddos", "detection-response"],
@@ -913,7 +999,20 @@ window.BULWARK = (function () {
     { title: "Database Security Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/Database_Security_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "Bind databases to localhost or restrict network access with firewall rules." },
     { title: "IPv4 Address Blocks Reserved for Documentation — RFC 5737", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc5737", verified: "2026-10-18", status: "consensus", note: "198.51.100.0/24 (TEST-NET-2), used in the firewall-log example." },
     { title: "Secure Code Review Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/Secure_Code_Review_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "How to run security-focused code review." },
-    { title: "OWASP Code Review Guide", pub: "OWASP", url: "https://owasp.org/www-project-code-review-guide/", verified: "2026-10-18", status: "reference", note: "The longer book-length companion (v2, 2017)." }
+    { title: "OWASP Code Review Guide", pub: "OWASP", url: "https://owasp.org/www-project-code-review-guide/", verified: "2026-10-18", status: "reference", note: "The longer book-length companion (v2, 2017)." },
+    { title: "HTTP Strict Transport Security (HSTS) — RFC 6797", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc6797", verified: "2026-10-18", status: "consensus", note: "max-age and includeSubDomains; §8.1: headers received over insecure transport must be ignored." },
+    { title: "HSTS Preload List Submission", pub: "Chromium", url: "https://hstspreload.org/", verified: "2026-10-18", status: "reference", note: "Requirements: valid cert, HTTP→HTTPS redirect, all subdomains on HTTPS, max-age ≥ 31536000 with includeSubDomains and preload." },
+    { title: "HTTP Strict Transport Security Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "Rollout guidance, and the warning that preload is hard to undo." },
+    { title: "New Tricks for Defeating SSL in Practice (sslstrip)", pub: "Marlinspike, Black Hat DC 2009", url: "https://www.blackhat.com/presentations/bh-dc-09/Marlinspike/BlackHat-DC-09-Marlinspike-Defeating-SSL.pdf", verified: "2026-10-18", status: "reference", note: "The SSL-stripping talk that motivated HSTS." },
+    { title: "Certificate Transparency — RFC 6962", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc6962", verified: "2026-10-18", status: "consensus", note: "The CT version browsers enforce." },
+    { title: "Certificate Transparency Version 2.0 — RFC 9162", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc9162", verified: "2026-10-18", status: "active", note: "Experimental successor to RFC 6962; not what browsers require today." },
+    { title: "Certificate Transparency", pub: "certificate.transparency.dev", url: "https://certificate.transparency.dev/", verified: "2026-10-18", status: "reference", note: "Project overview: detecting maliciously or mistakenly issued certificates; list of log monitors." },
+    { title: "Chrome Certificate Transparency Policy", pub: "Google Chrome", url: "https://googlechrome.github.io/CertificateTransparency/ct_policy.html", verified: "2026-10-18", status: "consensus", note: "Publicly trusted certificates must be CT-compliant (SCT requirements) in Chrome." },
+    { title: "Apple's Certificate Transparency policy", pub: "Apple", url: "https://support.apple.com/en-us/103214", verified: "2026-10-18", status: "consensus", note: "Apple platforms fail TLS for non-compliant certificates; at least one SCT from an RFC 6962 log." },
+    { title: "crt.sh Certificate Search", pub: "Sectigo", url: "https://crt.sh/", verified: "2026-10-18", status: "reference", note: "Public search over CT logs; one of the listed CT monitors." },
+    { title: "An update on attempted man-in-the-middle attacks", pub: "Google Security Blog, 2011", url: "https://security.googleblog.com/2011/08/update-on-attempted-man-in-middle.html", verified: "2026-10-18", status: "consensus", note: "The fraudulent DigiNotar certificate, used mainly against users in Iran." },
+    { title: "DigiNotar breach interim report (Operation Black Tulip)", pub: "Fox-IT, 2011", url: "https://www.sec.gov/Archives/edgar/data/1044777/000119312511241796/dex992.htm", verified: "2026-10-18", status: "consensus", note: "Forensic report on the CA compromise and the rogue *.google.com certificate." },
+    { title: "DNS Certification Authority Authorization (CAA) — RFC 8659", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc8659", verified: "2026-10-18", status: "consensus", note: "Domain holders list which CAs may issue; CAs must check before issuing." }
   ];
 
   const glossary = [
@@ -975,7 +1074,11 @@ window.BULWARK = (function () {
     { term: "Port scan", def: "Probing many network ports to see which services answer (open, closed or filtered). ATT&CK T1046.", lesson: "network-exposure" },
     { term: "Attack surface", def: "Everything an outsider can reach and interact with: open ports, endpoints, inputs. Smaller is safer.", lesson: "network-exposure" },
     { term: "Default deny", def: "A firewall or authorization policy that blocks everything not explicitly allowed.", lesson: "network-exposure" },
-    { term: "Secure code review", def: "Reading changes specifically for security flaws (authorization, injection, secrets) before they merge.", lesson: "secure-code-review" }
+    { term: "Secure code review", def: "Reading changes specifically for security flaws (authorization, injection, secrets) before they merge.", lesson: "secure-code-review" },
+    { term: "HSTS", def: "HTTP Strict Transport Security — a header telling browsers to use only HTTPS for a domain for a set time.", lesson: "hsts-ct" },
+    { term: "SSL stripping", def: "Downgrading a victim's connection to plain HTTP by intercepting the first unencrypted request.", lesson: "hsts-ct" },
+    { term: "Certificate Transparency (CT)", def: "Public, append-only logs of every publicly trusted certificate, so mis-issuance can be spotted.", lesson: "hsts-ct" },
+    { term: "CAA record", def: "A DNS record naming which Certificate Authorities may issue certificates for a domain.", lesson: "hsts-ct" }
   ];
 
   const challenges = [
@@ -1049,7 +1152,15 @@ window.BULWARK = (function () {
     { id: "fixation", cat: "Web", points: 15, title: "Fresh start",
       prompt: "To defeat session fixation, what must the server issue at the moment a user logs in? (two words)", placeholder: "…",
       hint: "Out with the old ___ ___.",
-      check: (a) => /^(a )?new session( id)?$/i.test(a.trim()) || /^(fresh|new) (session )?id$/i.test(a.trim()) }
+      check: (a) => /^(a )?new session( id)?$/i.test(a.trim()) || /^(fresh|new) (session )?id$/i.test(a.trim()) },
+    { id: "hstsyear", cat: "Web", points: 15, title: "A year in seconds",
+      prompt: "The HSTS preload list requires max-age of at least one year. How many seconds is that (365 days)?", placeholder: "seconds",
+      hint: "365 × 24 × 60 × 60.",
+      check: (a) => a.trim().replace(/[,_ ]/g, "") === "31536000" },
+    { id: "ctrfc", cat: "Crypto", points: 15, title: "The log everyone checks",
+      prompt: "Which RFC number specifies the Certificate Transparency version browsers enforce today?", placeholder: "RFC number",
+      hint: "Not the 2.0 one (9162).",
+      check: (a) => /^(rfc ?)?6962$/i.test(a.trim()) }
   ];
 
   return { eras, lessons, order, sources, glossary, challenges };

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 250" width="1200" height="250" role="img" aria-label="Progress: 27 lessons, 7 eras, 34 widgets, 19 challenges, 17 tests, 84 sources">
+<style>
+  .h{font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;fill:#9aa7b8;letter-spacing:.12em}
+  .num{font-family:Fraunces,Georgia,'Times New Roman',serif;font-size:48px;opacity:0;animation:pop .6s ease forwards}
+  .lab{font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#e8e4da}
+  .goal{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;fill:#9aa7b8;text-anchor:end}
+  .bar{transform-box:fill-box;transform-origin:left;transform:scaleX(0);animation:grow 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes grow{to{transform:scaleX(1)}}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .live{fill:#46b3a2;animation:blink 1.6s ease-in-out infinite}
+  @keyframes blink{50%{opacity:.25}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+  @media (prefers-reduced-motion: reduce){.num{opacity:1}.bar{transform:none}}
+</style>
+<rect width="1200" height="250" rx="18" fill="#0f1b2d"/>
+<circle cx="21" cy="32" r="6" class="live"/>
+<text x="35" y="37" class="h">WHAT'S BUILT · ALL GREEN · 0 RUNTIME DEPENDENCIES</text>
+<g transform="translate(15 58)">
+      <rect width="180" height="150" rx="14" fill="#16273f" stroke="#26374f"/>
+      <text x="18" y="62" class="num" style="fill:#d59a45;animation-delay:0.00s">27</text>
+      <text x="18" y="92" class="lab">Lessons</text>
+      <rect x="18" y="116" width="144" height="8" rx="4" fill="#26374f"/>
+      <rect x="18" y="116" width="97.2" height="8" rx="4" fill="#d59a45" class="bar" style="animation-delay:0.30s"/>
+      <text x="162" y="140" class="goal">next goal 40</text></g><g transform="translate(213 58)">
+      <rect width="180" height="150" rx="14" fill="#16273f" stroke="#26374f"/>
+      <text x="18" y="62" class="num" style="fill:#d59a45;animation-delay:0.12s">7</text>
+      <text x="18" y="92" class="lab">Eras</text>
+      <rect x="18" y="116" width="144" height="8" rx="4" fill="#26374f"/>
+      <rect x="18" y="116" width="144.0" height="8" rx="4" fill="#d59a45" class="bar" style="animation-delay:0.42s"/>
+      <text x="162" y="140" class="goal">✓ done</text></g><g transform="translate(411 58)">
+      <rect width="180" height="150" rx="14" fill="#16273f" stroke="#26374f"/>
+      <text x="18" y="62" class="num" style="fill:#46b3a2;animation-delay:0.24s">34</text>
+      <text x="18" y="92" class="lab">Interactive widgets</text>
+      <rect x="18" y="116" width="144" height="8" rx="4" fill="#26374f"/>
+      <rect x="18" y="116" width="122.4" height="8" rx="4" fill="#46b3a2" class="bar" style="animation-delay:0.54s"/>
+      <text x="162" y="140" class="goal">next goal 40</text></g><g transform="translate(609 58)">
+      <rect width="180" height="150" rx="14" fill="#16273f" stroke="#26374f"/>
+      <text x="18" y="62" class="num" style="fill:#46b3a2;animation-delay:0.36s">19</text>
+      <text x="18" y="92" class="lab">CTF challenges</text>
+      <rect x="18" y="116" width="144" height="8" rx="4" fill="#26374f"/>
+      <rect x="18" y="116" width="91.2" height="8" rx="4" fill="#46b3a2" class="bar" style="animation-delay:0.66s"/>
+      <text x="162" y="140" class="goal">next goal 30</text></g><g transform="translate(807 58)">
+      <rect width="180" height="150" rx="14" fill="#16273f" stroke="#26374f"/>
+      <text x="18" y="62" class="num" style="fill:#46b3a2;animation-delay:0.48s">17</text>
+      <text x="18" y="92" class="lab">Worked-example tests</text>
+      <rect x="18" y="116" width="144" height="8" rx="4" fill="#26374f"/>
+      <rect x="18" y="116" width="144.0" height="8" rx="4" fill="#46b3a2" class="bar" style="animation-delay:0.78s"/>
+      <text x="162" y="140" class="goal">✓ done</text></g><g transform="translate(1005 58)">
+      <rect width="180" height="150" rx="14" fill="#16273f" stroke="#26374f"/>
+      <text x="18" y="62" class="num" style="fill:#d59a45;animation-delay:0.60s">84</text>
+      <text x="18" y="92" class="lab">Cited sources</text>
+      <rect x="18" y="116" width="144" height="8" rx="4" fill="#26374f"/>
+      <rect x="18" y="116" width="121.0" height="8" rx="4" fill="#d59a45" class="bar" style="animation-delay:0.90s"/>
+      <text x="162" y="140" class="goal">next goal 100</text></g>
+</svg>

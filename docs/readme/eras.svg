@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 230" width="1200" height="230" role="img" aria-label="The 7-era curriculum timeline">
+<style>
+  .h{font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;fill:#9aa7b8;letter-spacing:.12em}
+  .node{opacity:0;animation:rise .6s ease forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .n{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15px;fill:#d59a45;text-anchor:middle}
+  .t{font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;fill:#e8e4da;text-anchor:middle}
+  .c{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;fill:#46b3a2;text-anchor:middle}
+  .p{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;fill:#9aa7b8;text-anchor:middle}
+  .rail{stroke:#26374f;stroke-width:4}
+  .flow{stroke:#d59a45;stroke-width:4;stroke-dasharray:10 14;animation:flow 1.4s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-48}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+  @media (prefers-reduced-motion: reduce){.node{opacity:1}}
+</style>
+<rect width="1200" height="230" rx="18" fill="#0f1b2d"/>
+<text x="80" y="40" class="h">THE CURRICULUM · HISTORY → PRESENT → FRONTIER</text>
+<line x1="80" y1="96" x2="1120" y2="96" class="rail"/>
+<line x1="80" y1="96" x2="1120" y2="96" class="flow"/>
+<g style="animation-delay:0.00s" class="node">
+      <circle cx="80" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="80" y="102" class="n">01</text>
+      <text x="80" y="148" class="t">Foundations</text>
+      <text x="80" y="170" class="c">2 lessons</text>
+      <text x="80" y="190" class="p">~50 BCE – 1945</text></g><g style="animation-delay:0.25s" class="node">
+      <circle cx="253.33333333333334" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="253.33333333333334" y="102" class="n">02</text>
+      <text x="253.33333333333334" y="148" class="t">Core concepts</text>
+      <text x="253.33333333333334" y="170" class="c">2 lessons</text>
+      <text x="253.33333333333334" y="190" class="p">the vocabulary</text></g><g style="animation-delay:0.50s" class="node">
+      <circle cx="426.6666666666667" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="426.6666666666667" y="102" class="n">03</text>
+      <text x="426.6666666666667" y="148" class="t">Live cryptography</text>
+      <text x="426.6666666666667" y="170" class="c">4 lessons</text>
+      <text x="426.6666666666667" y="190" class="p">today's internet</text></g><g style="animation-delay:0.75s" class="node">
+      <circle cx="600" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="600" y="102" class="n">04</text>
+      <text x="600" y="148" class="t">Applied security</text>
+      <text x="600" y="170" class="c">10 lessons</text>
+      <text x="600" y="190" class="p">the running web</text></g><g style="animation-delay:1.00s" class="node">
+      <circle cx="773.3333333333334" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="773.3333333333334" y="102" class="n">05</text>
+      <text x="773.3333333333334" y="148" class="t">API security</text>
+      <text x="773.3333333333334" y="170" class="c">3 lessons</text>
+      <text x="773.3333333333334" y="190" class="p">the API layer</text></g><g style="animation-delay:1.25s" class="node">
+      <circle cx="946.6666666666667" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="946.6666666666667" y="102" class="n">06</text>
+      <text x="946.6666666666667" y="148" class="t">Detection &amp; response</text>
+      <text x="946.6666666666667" y="170" class="c">3 lessons</text>
+      <text x="946.6666666666667" y="190" class="p">when it happens</text></g><g style="animation-delay:1.50s" class="node">
+      <circle cx="1120" cy="96" r="22" fill="#16273f" stroke="#d59a45" stroke-width="3"/>
+      <text x="1120" y="102" class="n">07</text>
+      <text x="1120" y="148" class="t">Frontier</text>
+      <text x="1120" y="170" class="c">3 lessons</text>
+      <text x="1120" y="190" class="p">2024 →</text></g>
+</svg>

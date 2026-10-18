@@ -576,3 +576,7 @@ textarea { font-family: var(--font-mono); resize: vertical; min-height: 3rem; }
 .cr-fixes { display: grid; gap: .4rem; }
 .cr-fix { text-align: left; font: inherit; cursor: pointer; }
 .cr-fix { background: var(--bg); border: 1px solid var(--line); color: var(--ink); width: 100%; }
+
+/* per-lesson "last verified" badge */
+.verified-badge { font-family: var(--font-mono); font-size: .74rem; color: var(--teal); border: 1px solid var(--teal); background: var(--teal-soft); border-radius: 5px; padding: .05rem .45rem; }
+.verified-badge.stale { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }

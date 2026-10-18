@@ -25,11 +25,11 @@ It is a **fully static site**: no backend, no build step, no runtime dependencie
 
 ## Current state — DONE
 
-**26 lessons across 7 eras** (the timeline spine). All render, all wired into `order`:
+**27 lessons across 7 eras** (the timeline spine). All render, all wired into `order`:
 
 - **Foundations:** classical ciphers; steganography
 - **Core concepts:** CIA triad; threat modeling (STRIDE)
-- **Live cryptography:** hashing; public-key (Diffie–Hellman, ECC, RSA); TLS 1.3 handshake + certificate chain
+- **Live cryptography:** hashing; public-key (Diffie–Hellman, ECC, RSA); TLS 1.3 handshake + certificate chain; HSTS + Certificate Transparency (walkthroughs)
 - **Applied security:** injection (SQLi, command injection, XSS); OWASP Top 10 (2025); authentication/passwords; tokens & OAuth; securing AI systems (OWASP LLM Top 10); software supply chain (A03)
 - **Applied (added 2026-10-18):** CSRF + SameSite and clickjacking (step-by-step walkthroughs); storing secrets (password hashing, envelope encryption/KMS/HSM, secret managers, rotation, git, client-side)
 - **Applied (also):** session fixation + open redirects (walkthroughs)
@@ -41,7 +41,7 @@ It is a **fully static site**: no backend, no build step, no runtime dependencie
 **34 interactive widgets** (all in `js/widgets/`, registered on `window.BulwarkWidgets`):
 cipher (+ frequency-analysis break), hash avalanche (real Web Crypto SHA-256), sqli, cmdi, xss (sandboxed iframe), cspbuilder, ddos amplification, ratelimit (token bucket), diffie-hellman, eccurve (canvas), tls stepper, tlsbytes (byte-level ClientHello), certchain, owasp accordion, entropy, pqc toggle, threatmodel canvas, attack (ATT&CK matrix), jwt (real HMAC verify), oauth/PKCE, promptinject (simulated), bb84 (QKD), quiz, heroanim, challenge (CTF), stego (LSB image), depgraph (supply chain), walkthrough (data-driven attack→defense story), apidefense (API control board), kdf (live PBKDF2 timing), envelope (real AES-GCM + AES-KW with KEK rotation), secretscan (pre-commit scanner), codereview (click the flawed line, pick the fix), exposure (port-scan outside view + firewall log).
 
-**Platform features:** hash-router SPA; home **learning-path map** (per-era columns, visited/next state, Continue button) + timeline with progress bar + lesson search; **Challenges** page (17 scored CTF puzzles, progress saved in `localStorage`) + "keep practicing" links; searchable **Glossary** (30+ terms); **Sources** page (cited, dated); **Labs** page; animated hero; light/dark theme with system + manual toggle.
+**Platform features:** hash-router SPA; home **learning-path map** (per-era columns, visited/next state, Continue button) + timeline with progress bar + lesson search; **Challenges** page (19 scored CTF puzzles, progress saved in `localStorage`) + "keep practicing" links; searchable **Glossary** (30+ terms); **Sources** page (cited, dated); **Labs** page; animated hero; light/dark theme with system + manual toggle.
 
 **Quality gates (both green):**
 - `node --test` → **17/17** worked-example tests in `tests/crypto.test.mjs` (ciphers, SHA-256, RSA, Diffie–Hellman, EC point addition over F₁₇, entropy, TLS byte-layout, JWT tamper, BB84 QBER, RFC 7914 PBKDF2/scrypt vectors, envelope-encryption rotation).
@@ -56,8 +56,6 @@ cipher (+ frequency-analysis break), hash avalanche (real Web Crypto SHA-256), s
 **Still fits in the static site (easy wins, same patterns):**
 - More walkthroughs: the `walkthrough` widget is pure data — add `{attack:[…], defend:[…]}` to a lesson (path traversal and XXE are natural next ones)
 - Per-category API lessons (BOLA, mass assignment, SSRF) building on `apidefense`
-- Certificate-transparency / HSTS lesson
-- Per-lesson "last verified" badges surfaced in the UI
 
 **Needs a real host — cannot live in a static site (milestones 3–4 of the original brief):**
 - The **containerized lab runner**: the truly sandboxed, runnable vulnerable targets described in `docs/LABS.md` (SQLi/XSS/path-traversal/SSRF labs, memory-safety labs under a sanitizer, DDoS simulate-then-mitigate). Needs OS-level isolation (container/namespace/seccomp), so it requires a backend or a desktop app.
@@ -68,6 +66,12 @@ cipher (+ frequency-analysis break), hash avalanche (real Web Crypto SHA-256), s
 - The 2026-10-18 additions' sources were verified that day; the older sources still need a link-check pass (the lychee workflow will flag dead ones).
 
 ---
+
+## README graphics
+
+`README.md` embeds animated SVGs from `docs/readme/` and has two generated blocks (progress tracker, lesson table). Regenerate with `node docs/readme/generate.mjs` after adding content; CI fails if they're stale. Flip roadmap steps to done in the `AREAS` list in that script. Each lesson also has a `verified` date shown as a badge (amber after 180 days).
+
+Repo: `Normansrule/Bulwark-Cybersecurity`; site: https://normansrule.github.io/Bulwark-Cybersecurity/. Publishing steps: `docs/DEPLOY.md`.
 
 ## Architecture — how to extend it (read this before editing)
 

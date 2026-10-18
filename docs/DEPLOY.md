@@ -1,8 +1,12 @@
-# Deploying Bulwark from a blank Ubuntu terminal
+# Publishing Bulwark Cybersecurity from a blank Ubuntu terminal
 
-Every command below is copy-paste-able. Replace `YOUR-USERNAME` with your GitHub
-username and, if you renamed the project, `bulwark` with your repo name. These
-steps assume you unzipped the project so that `~/bulwark/index.html` exists.
+Every command below is copy-paste-able. They assume the GitHub account
+**Normansrule** and the repository **Bulwark-Cybersecurity** (GitHub turns the
+name "Bulwark Cybersecurity" into that slug). The project zip already contains
+its git history on `main`, so there's no `git init` step.
+
+- Repository: https://github.com/Normansrule/Bulwark-Cybersecurity
+- Live site:  https://normansrule.github.io/Bulwark-Cybersecurity/
 
 ---
 
@@ -10,118 +14,91 @@ steps assume you unzipped the project so that `~/bulwark/index.html` exists.
 
 ```bash
 sudo apt update
-sudo apt install -y git unzip
-# The GitHub CLI (gh) makes the rest one-liners. Install it:
-sudo apt install -y gh   # if that package isn't found, see https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+sudo apt install -y git unzip gh nodejs npm
+# If `gh` isn't found: https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 
-# Tell git who you are (used for commit authorship):
 git config --global user.name  "Aleksander Norman"
 git config --global user.email "aleksanderjnorman@gmail.com"
+gh auth login            # GitHub.com → HTTPS → log in with a web browser
 ```
 
-If you have the zip rather than a folder:
+## 1. Unzip and check it works
 
 ```bash
 cd ~
-unzip bulwark.zip        # produces ~/bulwark
+unzip bulwark.zip        # produces ~/bulwark (with its .git history)
 cd ~/bulwark
+git log --oneline        # you should see the existing commits on main
+node --test              # worked-example tests: expect "fail 0"
+python3 -m http.server 8000   # open http://localhost:8000, then Ctrl-C
+```
+
+## 2. Create the repo and push
+
+```bash
+cd ~/bulwark
+gh repo create Bulwark-Cybersecurity --public --source=. --remote=origin --push \
+  --description "Open-source, defensive cybersecurity learning platform: ciphers to post-quantum, interactive and safe by construction."
+```
+
+## 3. Turn on GitHub Pages (serve `main`, repo root)
+
+```bash
+gh api -X POST repos/Normansrule/Bulwark-Cybersecurity/pages \
+  -f "source[branch]=main" -f "source[path]=/"
+```
+
+The site appears at https://normansrule.github.io/Bulwark-Cybersecurity/ within
+a minute or two. (Web UI alternative: **Settings → Pages → Deploy from a branch →
+`main` / `(root)` → Save**.)
+
+## 4. Turn on the security features the CI expects
+
+```bash
+# Secret scanning + push protection (free on public repos)
+gh api -X PATCH repos/Normansrule/Bulwark-Cybersecurity \
+  -f "security_and_analysis[secret_scanning][status]=enabled" \
+  -f "security_and_analysis[secret_scanning_push_protection][status]=enabled"
+
+# Dependabot alerts (Dependabot version updates are already configured in .github/dependabot.yml)
+gh api -X PUT repos/Normansrule/Bulwark-Cybersecurity/vulnerability-alerts
+```
+
+## 5. Watch the first CI run
+
+```bash
+gh run list --limit 5
+gh run watch             # pick the "ci" run; expect green
+```
+
+## 6. Tick the launch steps in the README tracker
+
+Open `docs/readme/generate.mjs`, set the four **Public launch** steps to `true`,
+then:
+
+```bash
+node docs/readme/generate.mjs
+git add -A && git commit -m "Mark public launch done in the README tracker" && git push
 ```
 
 ---
 
-## 1. Check it works locally first
+## Every change after that
 
 ```bash
 cd ~/bulwark
-node --test              # run the worked-example tests (expects: pass, 0 fail)
-python3 -m http.server 8000
-# open http://localhost:8000 in a browser, then Ctrl-C to stop
-```
-
----
-
-## 2. Create the repo and push — the easy path (GitHub CLI)
-
-```bash
-cd ~/bulwark
-gh auth login            # follow the browser prompt once
-
-git init
-git branch -M main
+node --test && node docs/readme/generate.mjs   # keep tests green and README numbers current
 git add -A
-git commit -m "Initial commit: Bulwark defensive security curriculum (MVP + public-key, TLS, OWASP, auth, post-quantum)
-
-Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-
-# Create the GitHub repo and push in one step:
-gh repo create bulwark --public --source=. --remote=origin --push
-
-# Turn on GitHub Pages (serve the site from the repo root of main):
-gh api --method POST "repos/YOUR-USERNAME/bulwark/pages" \
-  -f "source[branch]=main" -f "source[path]=/" || \
-  echo "If that failed, enable Pages in the web UI (step 4)."
-```
-
-Your site will be live in a minute or two at:
-`https://YOUR-USERNAME.github.io/bulwark/`
-
----
-
-## 3. Create the repo and push — the manual path (no gh)
-
-First create an **empty** repo named `bulwark` on github.com (no README,
-no .gitignore, no license — the project already has them). Then:
-
-```bash
-cd ~/bulwark
-git init
-git branch -M main
-git add -A
-git commit -m "Initial commit: Bulwark defensive security curriculum
-
-Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-git remote add origin https://github.com/YOUR-USERNAME/bulwark.git
-git push -u origin main
-```
-
----
-
-## 4. Enable Pages in the web UI (if step 2's API call didn't)
-
-On github.com: **your repo → Settings → Pages → Build and deployment →
-Source: Deploy from a branch → Branch: `main` / `/ (root)` → Save.**
-Wait a minute, then visit `https://YOUR-USERNAME.github.io/bulwark/`.
-
----
-
-## 5. Appending changes later (every time you add or edit anything)
-
-From inside `~/bulwark`:
-
-```bash
-git add -A
-git commit -m "Add TLS byte-walkthrough lesson"   # describe what changed
+git commit -m "Describe what changed"
 git push
 ```
 
-That's the whole loop — `add`, `commit`, `push`. GitHub Pages redeploys
-automatically on every push to `main`, usually within a minute.
-
-### Handy variations
-
-```bash
-git status               # see what changed before committing
-git add js/widgets/newthing.js docs/NEWLESSON.md   # stage specific files instead of -A
-git log --oneline        # review your commit history
-```
-
----
+GitHub Pages redeploys automatically on every push to `main`.
 
 ## Notes
 
-- The site is a **static** GitHub Pages app — no build step, no server, no secrets.
-- The one requirement is a secure context for the hash widget; `github.io` is
-  HTTPS, so it works there. Locally, use `http://localhost` (step 1), not a
-  `file://` path.
-- Tests run in CI automatically on every push (see `.github/workflows/ci.yml`),
-  and the same `node --test` runs locally.
+- The site is static: no build step, no server, no secrets.
+- The Web Crypto widgets need a secure context; `github.io` is HTTPS,
+  so they work there. Locally use `http://localhost`, not `file://`.
+- GitHub Pages can't set response headers, so `frame-ancestors` can't be
+  enforced there; see `docs/SECURITY.md`.
