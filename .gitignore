@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node (tests / tooling only; the web app ships no runtime deps)
+node_modules/
+npm-debug.log*
+package-lock.json.bak
+
+# Build / preview artifacts
+dist/
+*.log

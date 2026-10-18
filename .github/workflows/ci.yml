@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least-privilege by default; jobs opt in to more only if they need it.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Worked-example tests + render smoke test
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned by full commit SHA; Dependabot keeps the pins current.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: for f in js/*.js js/widgets/*.js; do node --check "$f"; done
+      - name: Run tests
+        run: node --test
+      - name: Smoke test (renders every route, mounts every widget)
+        run: |
+          npm install --no-save jsdom@26
+          node tests/smoke.cjs
+
+  # Guardrail: fail CI if runnable offensive tooling sneaks in.
+  # This is a lightweight tripwire, not a security scanner — see docs/ETHICS.md.
+  policy-tripwire:
+    name: Ethics tripwire
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check for banned patterns
+        run: |
+          if grep -rInE "(target[_-]?host|remote[_-]?target|attack.*\b(url|host|ip)\b.*input)" \
+               --include="*.js" --include="*.html" js/ index.html; then
+            echo "::error::Possible external-target attack surface found. See docs/ETHICS.md."
+            exit 1
+          fi
+          # The site must never make network requests from widget code.
+          if grep -rInE "\b(fetch|XMLHttpRequest|WebSocket|sendBeacon)\s*\(" --include="*.js" js/; then
+            echo "::error::Widget code must not make network requests. See docs/SECURITY.md."
+            exit 1
+          fi
+          echo "No banned patterns found."

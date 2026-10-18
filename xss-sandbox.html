@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XSS sandbox</title>
+<!--
+  This page is loaded ONLY inside a sandboxed iframe (sandbox="allow-scripts",
+  no allow-same-origin) by the XSS lesson widget. Its whole job is to render a
+  learner-supplied string two ways so the difference is visible:
+    - mode "html": el.innerHTML = payload   (the vulnerable pattern)
+    - mode "text": el.textContent = payload (the safe pattern)
+  Because it is sandboxed with an opaque origin, script that runs here cannot
+  read or change the parent page, its storage, or its cookies. alert/confirm/
+  prompt are overridden so a payload that "fires" is detected without popping a
+  dialog. This file intentionally sets no Content Security Policy, so that when
+  the parent site DOES ship a strict CSP, the contrast is instructive.
+-->
+<style>
+  html,body{margin:0}
+  body{font:13px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111;background:#fff;padding:8px}
+  #stage{min-height:2.5rem}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+  (function () {
+    var stage = document.getElementById("stage");
+    var fired = false;
+    // Detect execution without annoying dialogs.
+    window.alert = function () { fired = true; };
+    window.confirm = function () { fired = true; return false; };
+    window.prompt = function () { fired = true; return null; };
+    window.addEventListener("error", function () { /* swallow render errors from broken payloads */ });
+
+    window.addEventListener("message", function (e) {
+      var msg = e.data || {};
+      if (msg.type !== "render") return;
+      fired = false;
+      try {
+        if (msg.mode === "html") {
+          stage.innerHTML = String(msg.payload);          // vulnerable on purpose
+        } else {
+          stage.textContent = String(msg.payload);        // safe: input stays data
+        }
+      } catch (err) { /* ignore */ }
+      // Give inline handlers (e.g. img onerror) a tick to run, then report.
+      setTimeout(function () {
+        parent.postMessage({
+          type: "result",
+          mode: msg.mode,
+          fired: fired,
+          nodeCount: stage.querySelectorAll("*").length
+        }, "*");
+      }, 30);
+    });
+    parent.postMessage({ type: "ready" }, "*");
+  })();
+</script>
+</body>
+</html>

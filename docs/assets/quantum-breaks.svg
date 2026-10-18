@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 320" font-family="'IBM Plex Sans',system-ui,sans-serif" role="img" aria-label="What a large quantum computer breaks versus what survives">
+  <rect x="0" y="0" width="820" height="320" rx="14" fill="#0f1b2d"/>
+  <text x="28" y="40" fill="#e8e4da" font-size="20" font-weight="600" font-family="Fraunces,Georgia,serif">What a large quantum computer changes</text>
+
+  <!-- Breaks -->
+  <rect x="28" y="64" width="370" height="228" rx="12" fill="#14233b" stroke="#c0563f"/>
+  <text x="48" y="94" fill="#c0563f" font-size="15" font-weight="700">Broken by Shor's algorithm</text>
+  <text x="48" y="114" fill="#9aa7b8" font-size="12">Hardness assumption collapses entirely</text>
+  <g font-size="14">
+    <text x="48" y="150" fill="#e8e4da">RSA — integer factoring</text>
+    <text x="48" y="182" fill="#e8e4da">Elliptic-Curve Cryptography (ECC)</text>
+    <text x="48" y="214" fill="#e8e4da">Diffie–Hellman — discrete log</text>
+  </g>
+  <text x="48" y="256" fill="#9aa7b8" font-size="12">Replace with lattice / hash-based schemes:</text>
+  <text x="48" y="276" fill="#2f9e8f" font-size="13">ML-KEM (FIPS 203), ML-DSA (FIPS 204)</text>
+
+  <!-- Survives -->
+  <rect x="422" y="64" width="370" height="228" rx="12" fill="#14233b" stroke="#2f9e8f"/>
+  <text x="442" y="94" fill="#2f9e8f" font-size="15" font-weight="700">Only needs to resize (Grover's)</text>
+  <text x="442" y="114" fill="#9aa7b8" font-size="12">Speedup is quadratic — double the key/output</text>
+  <g font-size="14">
+    <text x="442" y="150" fill="#e8e4da">AES-256 — still ample margin</text>
+    <text x="442" y="182" fill="#e8e4da">SHA-256 / SHA-3 — use longer output</text>
+    <text x="442" y="214" fill="#e8e4da">Symmetric keys generally</text>
+  </g>
+  <text x="442" y="256" fill="#9aa7b8" font-size="12">Threat framing: "harvest now, decrypt later" —</text>
+  <text x="442" y="276" fill="#9aa7b8" font-size="12">recorded traffic is decrypted once hardware exists.</text>
+</svg>

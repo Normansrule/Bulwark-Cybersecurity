@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="An open-source, defensive cybersecurity learning platform: from classical ciphers to post-quantum, with interactive widgets and safe attack-then-defend labs.">
+
+  <!-- Strict Content Security Policy. No inline scripts or styles anywhere; the
+       app models the practices it teaches. Scripts and styles load only from this
+       origin; fonts from Google Fonts; nothing else, and no form may post off-site.
+       frame-ancestors is deliberately absent: browsers ignore it in a <meta> tag,
+       so it must be sent as a response header (see docs/SECURITY.md). -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'self';
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' data:;
+    frame-src 'self';
+    connect-src 'self';
+    base-uri 'none';
+    form-action 'none';
+    object-src 'none'">
+
+  <title>Bulwark</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme-init.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="#/">
+      <span class="brand-mark"><b>Bul</b>wark</span>
+      <span class="brand-tag">defensive security, from zero</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#/" data-route="home">Timeline</a>
+      <a href="#/labs" data-route="labs">Labs</a>
+      <a href="#/challenges" data-route="challenges">Challenges</a>
+      <a href="#/glossary" data-route="glossary">Glossary</a>
+      <a href="#/sources" data-route="sources">Sources</a>
+    </nav>
+    <button id="theme-toggle" class="iconbtn" type="button" aria-label="Toggle light and dark theme">&#9789;</button>
+  </header>
+
+  <main id="app"></main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>Bulwark &#8212; an open-source defensive security curriculum. MIT licensed.</span>
+      <span><a href="docs/ETHICS.md">Ethics</a> &#183; <a href="docs/SECURITY.md">Security</a> &#183; <a href="docs/LABS.md">Lab design</a></span>
+    </div>
+  </footer>
+
+  <script src="js/content.js" defer></script>
+  <script src="js/widgets/cipher.js" defer></script>
+  <script src="js/widgets/hash.js" defer></script>
+  <script src="js/widgets/sqli.js" defer></script>
+  <script src="js/widgets/xss.js" defer></script>
+  <script src="js/widgets/ddos.js" defer></script>
+  <script src="js/widgets/diffie-hellman.js" defer></script>
+  <script src="js/widgets/eccurve.js" defer></script>
+  <script src="js/widgets/entropy.js" defer></script>
+  <script src="js/widgets/tls.js" defer></script>
+  <script src="js/widgets/owasp.js" defer></script>
+  <script src="js/widgets/pqc.js" defer></script>
+  <script src="js/widgets/threatmodel.js" defer></script>
+  <script src="js/widgets/attack.js" defer></script>
+  <script src="js/widgets/tlsbytes.js" defer></script>
+  <script src="js/widgets/cmdi.js" defer></script>
+  <script src="js/widgets/quiz.js" defer></script>
+  <script src="js/widgets/jwt.js" defer></script>
+  <script src="js/widgets/oauth.js" defer></script>
+  <script src="js/widgets/promptinject.js" defer></script>
+  <script src="js/widgets/ratelimit.js" defer></script>
+  <script src="js/widgets/cspbuilder.js" defer></script>
+  <script src="js/widgets/bb84.js" defer></script>
+  <script src="js/widgets/heroanim.js" defer></script>
+  <script src="js/widgets/challenge.js" defer></script>
+  <script src="js/widgets/stego.js" defer></script>
+  <script src="js/widgets/certchain.js" defer></script>
+  <script src="js/widgets/depgraph.js" defer></script>
+  <script src="js/widgets/walkthrough.js" defer></script>
+  <script src="js/widgets/apidefense.js" defer></script>
+  <script src="js/widgets/kdf.js" defer></script>
+  <script src="js/widgets/envelope.js" defer></script>
+  <script src="js/widgets/secretscan.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
