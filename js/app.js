@@ -124,6 +124,35 @@
     flag.append(fp); hero.append(flag);
     wrap.append(hero);
 
+    /* learning-path map: one column per era, one stop per lesson, in order */
+    const seen = visited();
+    const nextId = flatOrder.find((id) => !seen.includes(id));
+    const map = h("section", "pathmap");
+    const mapHead = h("div", "pm-head");
+    mapHead.append(h("h2", null, "Your path"));
+    if (nextId) { const go = h("a", "btn btn-primary", "Continue: " + lessons[nextId].title + " →"); go.href = "#/lesson/" + nextId; mapHead.append(go); }
+    else mapHead.append(h("span", "state safe", "Every lesson visited"));
+    map.append(mapHead);
+    const cols = h("ol", "pm-cols");
+    eras.forEach((era) => {
+      const ids = order[era.id] || [];
+      const col = h("li", "pm-col");
+      const done = ids.filter((id) => seen.includes(id)).length;
+      col.append(h("div", "pm-era", era.num + " · " + era.title), h("div", "pm-count", done + "/" + ids.length));
+      const stops = h("ol", "pm-stops");
+      ids.forEach((id) => {
+        const li = h("li");
+        const a = h("a", "pm-stop" + (seen.includes(id) ? " done" : "") + (id === nextId ? " next" : ""));
+        a.href = "#/lesson/" + id;
+        a.append(h("span", "pm-dot", seen.includes(id) ? "✓" : ""), h("span", "pm-name", lessons[id].title));
+        if (id === nextId) a.setAttribute("aria-current", "step");
+        li.append(a); stops.append(li);
+      });
+      col.append(stops); cols.append(col);
+    });
+    map.append(cols);
+    wrap.append(map);
+
     const tl = h("section", "timeline");
     tl.append(h("h2", null, "The timeline"));
     const N = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"][eras.length] || String(eras.length);

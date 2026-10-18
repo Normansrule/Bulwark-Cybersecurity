@@ -50,6 +50,8 @@ const files = [
   "js/widgets/kdf.js",
   "js/widgets/envelope.js",
   "js/widgets/secretscan.js",
+  "js/widgets/codereview.js",
+  "js/widgets/exposure.js",
   "js/app.js",
 ];
 
@@ -95,6 +97,9 @@ check("#/lesson/csrf-samesite", "lesson: csrf");
 check("#/lesson/clickjacking", "lesson: clickjacking");
 check("#/lesson/api-security", "lesson: api");
 check("#/lesson/automated-pentesting", "lesson: autopentest");
+check("#/lesson/session-attacks", "lesson: sessions");
+check("#/lesson/network-exposure", "lesson: exposure");
+check("#/lesson/secure-code-review", "lesson: codereview");
 check("#/challenges", "challenges");
 check("#/glossary", "glossary");
 check("#/labs", "labs");
@@ -147,6 +152,40 @@ try {
   console.log("secret scan:", leaky.length, "hits on leaky,", clean.length, "on clean");
   if (leaky.length !== 3 || clean.length !== 0) errors.push("secretscan: expected 3 hits on leaky sample and 0 on clean");
 } catch (e) { errors.push("secretscan exercise: " + e.message); }
+
+// home path map: one stop per lesson
+{
+  window.location.hash = "#/"; window.dispatchEvent(new window.Event("hashchange"));
+  const stops = window.document.querySelectorAll(".pm-stop").length;
+  const total = Object.values(window.BULWARK.order).flat().length;
+  console.log("path map stops:", stops, "of", total);
+  if (stops !== total) errors.push("path map shows " + stops + " stops for " + total + " lessons");
+}
+
+// code review: wrong line rejected, right line + right fix scores
+try {
+  const box = window.document.createElement("div");
+  const data = window.BULWARK.lessons["secure-code-review"].body.find(b => b.id === "codereview").data;
+  window.BulwarkWidgets.codereview(box, data);
+  const lines = box.querySelectorAll(".cr-line");
+  lines[0].click();
+  const wrongOk = box.querySelector(".cr-fixes").hidden === true;
+  lines[data[0].bug].click();
+  box.querySelectorAll(".cr-fix")[data[0].answer].click();
+  const scored = /^1 \//.test(box.querySelector(".quiz-actions .state").textContent);
+  console.log("code review scores a correct fix:", wrongOk && scored);
+  if (!(wrongOk && scored)) errors.push("codereview: line/fix selection did not behave");
+  if (data.some(d => d.bug >= d.lines.length || d.answer >= d.fixes.length)) errors.push("codereview: an answer index is out of range");
+} catch (e) { errors.push("codereview exercise: " + e.message); }
+
+// exposure: wide open by default; fully hardened shows only 80/443 open
+try {
+  const sv = window.BulwarkWidgets.exposure._scanView;
+  const open = (cfg) => sv(cfg).filter(r => r.state === "open").map(r => r.port).join(",");
+  const hard = open({ defaultDeny: true, vpnSsh: true, localOnly: true });
+  console.log("exposure open ports default:", open({}), " hardened:", hard);
+  if (hard !== "80,443") errors.push("exposure: hardened config should leave only 80,443 open, got " + hard);
+} catch (e) { errors.push("exposure exercise: " + e.message); }
 
 console.log("\n" + (errors.length ? "ERRORS:\n" + errors.join("\n") : "SMOKE TEST CLEAN — no runtime errors, all views rendered."));
 process.exit(errors.length ? 1 : 0);

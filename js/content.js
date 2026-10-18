@@ -711,6 +711,121 @@ window.BULWARK = (function () {
         ]}
       ]
     }
+,
+    "session-attacks": {
+      era: "applied",
+      title: "Session fixation and open redirects",
+      subtitle: "Two small mistakes in login flows, and the one-line habits that prevent them.",
+      minutes: 9,
+      body: [
+        { t: "p", md: "After you log in, a **session ID** in a cookie is your identity. Two classic bugs abuse the moments around login: letting someone else choose your session ID before you log in (**session fixation**), and letting a link choose where the site sends you afterwards (**open redirect**)." },
+        { t: "h", text: "Session fixation" },
+        { t: "widget", id: "walkthrough", data: {
+          title: "A session ID chosen in advance",
+          attack: [
+            { who: "attacker", say: "The attacker visits the shop and is given an anonymous session ID. They note it down.", screen: { kind: "response", title: "Set-Cookie header", lines: ["Set-Cookie: sid=A1B2C3; Secure; HttpOnly"], hl: "sid=A1B2C3" } },
+            { who: "attacker", say: "On this flawed site the session ID can also travel in the URL. The attacker sends you a link carrying their ID.", screen: { kind: "browser", url: "https://shop.example/login?sid=A1B2C3", lines: ["Sign in to Shop"], hl: "sid=A1B2C3" } },
+            { who: "victim", say: "You sign in normally. The site upgrades the existing session to \"logged in as you\" but keeps the same ID.", screen: { kind: "terminal", lines: ["session A1B2C3: anonymous → user=sam (ID unchanged)"], hl: "ID unchanged" } },
+            { who: "attacker", say: "The attacker already holds A1B2C3, so they are now logged in as you.", screen: { kind: "browser", url: "https://shop.example/account", lines: ["Hello, Sam.", "Saved card ending 4242"] } }
+          ],
+          defend: [
+            { who: "defender", label: "Rotate on login", say: "The server issues a brand-new random session ID at login and throws the old one away. The ID the attacker holds is now worthless.", screen: { kind: "terminal", lines: ["login ok for sam: session A1B2C3 destroyed, new session 9F7E… issued"], hl: "new session" } },
+            { who: "defender", label: "Cookies only", say: "Session IDs are accepted only from a Secure, HttpOnly, SameSite cookie, never from the URL, so they can't be planted with a link.", screen: { kind: "response", title: "Set-Cookie header", lines: ["Set-Cookie: __Host-sid=9F7E…; Secure; HttpOnly; SameSite=Lax; Path=/"], hl: "__Host-" } },
+            { who: "victim", say: "Same on every privilege change (password reset, MFA step-up, switching to admin): new privileges, new session ID.", screen: { kind: "browser", url: "https://shop.example/account", lines: ["Hello, Sam.", "(only you hold this session)"] } }
+          ] } },
+        { t: "h", text: "Open redirects" },
+        { t: "widget", id: "walkthrough", data: {
+          title: "A trusted link that lands somewhere else",
+          attack: [
+            { who: "app", say: "After login, the bank sends you back to the page you came from, read from a next= parameter.", screen: { kind: "browser", url: "https://bank.example/login?next=/statements", lines: ["Sign in to continue"], hl: "next=/statements" } },
+            { who: "attacker", say: "A phishing email uses the real bank domain, but the next= value points to a look-alike site.", screen: { kind: "browser", url: "https://bank.example/login?next=https://bank-secure.example/verify", lines: ["(the real bank's real login page)"], hl: "next=https://bank-secure.example/verify" } },
+            { who: "victim", say: "You check the domain, it's genuine, and you sign in. The bank then forwards you to the look-alike, which asks you to \"re-enter your card details\".", screen: { kind: "browser", url: "https://bank-secure.example/verify", lines: ["Session expired. Please confirm your card number."], button: "Confirm", decoy: true } }
+          ],
+          defend: [
+            { who: "defender", label: "Allowlist", say: "The server only redirects to its own relative paths, or to an explicit allowlist. Anything else falls back to the home page.", screen: { kind: "code", lines: ["next = request.query.next", "if not is_safe_relative_path(next):  # starts with a single '/', no scheme or host", "    next = '/'", "redirect(next)"], hl: "is_safe_relative_path" } },
+            { who: "defender", label: "Indirect references", say: "Better still, the link carries an ID (next=statements) that the server maps to a path, so no URL from the user is ever followed.", screen: { kind: "code", lines: ["DESTINATIONS = {'statements': '/statements', 'cards': '/cards'}", "redirect(DESTINATIONS.get(request.query.next, '/'))"] } },
+            { who: "victim", say: "The phishing link now just drops you on the bank's own home page.", screen: { kind: "browser", url: "https://bank.example/", lines: ["Welcome back."] } }
+          ] } },
+        { t: "widget", id: "quiz", data: [
+          { q: "What single change defeats session fixation?", choices: ["Longer session IDs", "Issue a new session ID at login and every privilege change", "Shorter timeouts", "Hashing the session ID"], answer: 1, explain: "A fresh ID at authentication makes any ID the attacker planted beforehand useless." },
+          { q: "Why are open redirects useful to phishers?", choices: ["They break TLS", "The link shows a trusted domain, which then forwards to an untrusted one", "They steal cookies directly", "They disable MFA"], answer: 1, explain: "Victims (and filters) trust the real domain at the start of the link." }
+        ]}
+      ]
+    },
+
+    "network-exposure": {
+      era: "detection",
+      title: "Port scanning and attack surface",
+      subtitle: "What an internet-wide scan sees of your server, and how to make it see almost nothing.",
+      minutes: 10,
+      body: [
+        { t: "p", md: "Every service listening on a network port is a door. **Port scanning** is the act of knocking on many doors to see which answer, and it happens to every internet-facing address, constantly, from researchers and criminals alike. You can't stop being scanned; you can control what the scan finds." },
+        { t: "table",
+          head: ["A scan reports…", "Meaning", "What it tells an outsider"],
+          rows: [
+            ["**open**", "a service accepted the connection", "something is running here; they'll try to identify it"],
+            ["**closed**", "the host answered, but nothing is listening", "the machine exists and is reachable"],
+            ["**filtered**", "no answer: a firewall dropped the probe", "very little, which is the point"]
+          ] },
+        { t: "widget", id: "exposure" },
+        { t: "h", text: "Shrinking the attack surface" },
+        { t: "list", items: [
+          "**Default-deny inbound.** Allow only the ports the product needs (usually 443, plus 80 to redirect) and drop everything else.",
+          "**Bind internal services privately.** Databases, caches and admin APIs should listen on `127.0.0.1` or a private subnet, never `0.0.0.0` on a public interface. A firewall mistake then exposes nothing.",
+          "**Put admin access behind a VPN or bastion** with key-based SSH, not open to the world.",
+          "**Scan yourself.** Run an authorized external scan of *your own* address ranges on a schedule and diff the results, so a newly opened port is caught by you first. Cloud providers' security tools can do this continuously.",
+          "**Detect scans in your logs.** One source touching many ports in seconds is MITRE ATT&CK **T1046 (Network Service Discovery)**. Alone it's noise; followed by login attempts it's a lead."
+        ]},
+        { t: "note", kind: "attack", md: "Scanning networks you don't own or have written permission to test can be illegal. Bulwark's widget computes its \"scan\" from a table on the page; it sends nothing." },
+        { t: "widget", id: "quiz", data: [
+          { q: "A probe gets no reply at all. The port is reported as…", choices: ["open", "closed", "filtered", "vulnerable"], answer: 2, explain: "Silence usually means a firewall dropped the packet." },
+          { q: "Best place for a database to listen?", choices: ["0.0.0.0 on the public interface with a strong password", "127.0.0.1 or a private subnet, behind a default-deny firewall", "Port 443 so it looks like a website", "A random high port"], answer: 1, explain: "Layer it: not listening publicly and blocked by the firewall. Obscure ports are found by any full scan." }
+        ]}
+      ]
+    },
+
+    "secure-code-review": {
+      era: "api",
+      title: "Secure code review: find it before an attacker does",
+      subtitle: "Six short server snippets. Click the flawed line, then choose the fix.",
+      minutes: 12,
+      body: [
+        { t: "p", md: "Code review is the cheapest place to stop a vulnerability: no exploit, no incident, just a comment on a pull request. Reviewers who know the common shapes of security bugs catch them in seconds. Each snippet below has **one** line that creates a vulnerability from earlier lessons. Find it, then pick the fix a senior reviewer would ask for." },
+        { t: "widget", id: "codereview", data: [
+          { title: "Order lookup", file: "routes/orders.js",
+            lines: ["router.get('/api/orders/:id', requireLogin, async (req, res) => {", "  const order = await db.orders.findById(req.params.id);", "  if (!order) return res.status(404).end();", "  res.json(order);", "});"],
+            bug: 1, why: "the query fetches any order by ID without checking it belongs to the logged-in user (BOLA, OWASP API1).",
+            fixes: ["Switch to random UUIDs for order IDs", "Scope the query to the caller: findOne({ id, ownerId: req.user.id }), returning 404 otherwise", "Hide the order ID from the URL", "Add rate limiting to the route"],
+            answer: 1, explain: "Ownership must be enforced in the query or a shared policy check. UUIDs and rate limits only slow enumeration." },
+          { title: "Profile update", file: "routes/profile.js",
+            lines: ["router.patch('/api/users/me', requireLogin, async (req, res) => {", "  const user = await db.users.findById(req.user.id);", "  Object.assign(user, req.body);", "  await user.save();", "  res.json(toPublicProfile(user));", "});"],
+            bug: 2, why: "every field in the request body is copied onto the user record, including role or balance (mass assignment, OWASP API3).",
+            fixes: ["Validate that req.body is JSON", "Copy only allowlisted fields: const { displayName, bio } = req.body", "Remove the role field from the HTML form", "Run the update in a transaction"],
+            answer: 1, explain: "Bind only the fields this endpoint lets clients change. Hiding a form field doesn't stop someone sending it." },
+          { title: "Search", file: "repo/products.py",
+            lines: ["def search(term):", "    sql = \"SELECT id, name FROM products WHERE name LIKE '%\" + term + \"%'\"", "    return db.execute(sql).fetchall()"],
+            bug: 1, why: "user input is concatenated into SQL text, so it can change the query's structure (injection).",
+            fixes: ["Escape single quotes in term", "Use a bound parameter: execute(\"… LIKE ?\", ('%' + term + '%',))", "Limit term to 50 characters", "Catch database errors so nothing is shown"],
+            answer: 1, explain: "Parameters travel separately from the query, so input can never become SQL. Escaping by hand is fragile." },
+          { title: "Account creation", file: "auth/register.py",
+            lines: ["def register(email, password):", "    digest = hashlib.sha256(password.encode()).hexdigest()", "    db.users.insert(email=email, password_hash=digest)"],
+            bug: 1, why: "a single fast, unsalted SHA-256 lets a stolen database be cracked at billions of guesses per second.",
+            fixes: ["Use SHA-512 instead", "Hash with Argon2id via a vetted library, e.g. PasswordHasher().hash(password)", "Encrypt the password with AES", "Hash it twice"],
+            answer: 1, explain: "Password storage needs a slow, salted, ideally memory-hard function. Bigger or repeated fast hashes don't fix it, and encryption is reversible." },
+          { title: "Payment client", file: "services/payments.js",
+            lines: ["const client = new PaymentsClient({", "  apiKey: 'live_51HxQfake0nly4teachingXyZ',", "  timeoutMs: 5000,", "});"],
+            bug: 1, why: "a live credential is hardcoded in source, so everyone with repo access (and every clone, fork and CI log) has it.",
+            fixes: ["Base64-encode the key", "Load it at runtime from a secret manager or injected env var, and rotate the exposed key", "Move it to a config.json file", "Make the repository private"],
+            answer: 1, explain: "Secrets belong in a secret manager, referenced by name. Once committed, the key must also be rotated." },
+          { title: "Link preview", file: "routes/preview.js",
+            lines: ["router.post('/api/preview', requireLogin, async (req, res) => {", "  const page = await httpGet(req.body.url, { followRedirects: true });", "  res.json({ title: extractTitle(page) });", "});"],
+            bug: 1, why: "the server fetches whatever URL the user supplies, including internal and cloud-metadata addresses (SSRF, OWASP API7).",
+            fixes: ["Check that the URL string doesn't contain 'localhost'", "Allow only https to approved hosts, resolve DNS and refuse private/loopback/link-local addresses, and disable redirects", "Set a shorter timeout", "Only allow logged-in users"],
+            answer: 1, explain: "String blocklists are bypassed by alternate address forms and redirects. Validate the resolved destination against an allowlist." }
+        ]},
+        { t: "note", kind: "defend", md: "**Make the review systematic.** A short checklist on every pull request that touches a route: *Who may call this? Which object, which fields? Is input bound as data? Where do secrets come from? What can this make the server fetch?* Static analysis (this repo runs CodeQL) catches some of these automatically; the authorization questions still need a human." }
+      ]
+    }
 
   };
 
@@ -719,9 +834,9 @@ window.BULWARK = (function () {
     foundations: ["classical-ciphers", "steganography"],
     core: ["cia-triad", "threat-modeling"],
     live: ["hashing", "public-key", "tls-handshake"],
-    applied: ["injection", "csrf-samesite", "clickjacking", "owasp-top10", "passwords-auth", "storing-secrets", "tokens-oauth", "llm-security", "supply-chain"],
-    api: ["api-security", "automated-pentesting"],
-    detection: ["availability-ddos", "detection-response"],
+    applied: ["injection", "csrf-samesite", "clickjacking", "session-attacks", "owasp-top10", "passwords-auth", "storing-secrets", "tokens-oauth", "llm-security", "supply-chain"],
+    api: ["api-security", "secure-code-review", "automated-pentesting"],
+    detection: ["network-exposure", "availability-ddos", "detection-response"],
     frontier: ["frontier-pqc", "quantum-crypto", "zero-trust"]
   };
 
@@ -789,7 +904,16 @@ window.BULWARK = (function () {
     { title: "Additional HTTP Status Codes — RFC 6585", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc6585", verified: "2026-10-18", status: "consensus", note: "Defines 429 Too Many Requests." },
     { title: "Reserved Top Level DNS Names — RFC 2606", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc2606", verified: "2026-10-18", status: "consensus", note: "Why every host in the walkthroughs ends in .example." },
     { title: "Shannon — autonomous AI pentester", pub: "Keygraph", url: "https://github.com/KeygraphHQ/shannon", verified: "2026-10-18", status: "reference", note: "Source-aware AI pentesting for web apps and APIs; focuses on injection, XSS, SSRF, broken authn/authz. AGPL-3.0; referenced, not bundled." },
-    { title: "Hacksplaining", pub: "Hacksplaining", url: "https://www.hacksplaining.com/", verified: "2026-10-18", status: "reference", note: "Style inspiration for the short, visual step-by-step walkthroughs. No content copied." }
+    { title: "Hacksplaining", pub: "Hacksplaining", url: "https://www.hacksplaining.com/", verified: "2026-10-18", status: "reference", note: "Style inspiration for the short, visual step-by-step walkthroughs. No content copied." },
+    { title: "Session Management Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "Regenerate the session ID after authentication and any privilege change to prevent session fixation." },
+    { title: "Unvalidated Redirects and Forwards Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "Don't take redirect destinations from user input; allowlist approved destinations." },
+    { title: "Network Service Discovery (T1046)", pub: "MITRE ATT&CK", url: "https://attack.mitre.org/techniques/T1046/", verified: "2026-10-18", status: "consensus", note: "The ATT&CK technique for port and service scanning." },
+    { title: "Port Scanning Basics", pub: "Nmap Network Scanning", url: "https://nmap.org/book/man-port-scanning-basics.html", verified: "2026-10-18", status: "reference", note: "Definitions of the open, closed and filtered port states." },
+    { title: "Guidelines on Firewalls and Firewall Policy — SP 800-41 Rev. 1", pub: "NIST", url: "https://csrc.nist.gov/pubs/sp/800/41/r1/final", verified: "2026-10-18", status: "consensus", note: "Recommends deny-by-default for inbound traffic (Executive Summary and §4)." },
+    { title: "Database Security Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/Database_Security_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "Bind databases to localhost or restrict network access with firewall rules." },
+    { title: "IPv4 Address Blocks Reserved for Documentation — RFC 5737", pub: "IETF", url: "https://www.rfc-editor.org/rfc/rfc5737", verified: "2026-10-18", status: "consensus", note: "198.51.100.0/24 (TEST-NET-2), used in the firewall-log example." },
+    { title: "Secure Code Review Cheat Sheet", pub: "OWASP", url: "https://cheatsheetseries.owasp.org/cheatsheets/Secure_Code_Review_Cheat_Sheet.html", verified: "2026-10-18", status: "consensus", note: "How to run security-focused code review." },
+    { title: "OWASP Code Review Guide", pub: "OWASP", url: "https://owasp.org/www-project-code-review-guide/", verified: "2026-10-18", status: "reference", note: "The longer book-length companion (v2, 2017)." }
   ];
 
   const glossary = [
@@ -845,7 +969,13 @@ window.BULWARK = (function () {
     { term: "BOLA", def: "Broken Object Level Authorization (OWASP API1) — the API returns records without checking the caller owns them.", lesson: "api-security" },
     { term: "BFLA", def: "Broken Function Level Authorization (OWASP API5) — a user can call functions (often admin ones) they shouldn't.", lesson: "api-security" },
     { term: "Mass assignment", def: "Binding every field of a request onto a data model, letting clients set fields like role or balance.", lesson: "api-security" },
-    { term: "SSRF", def: "Server-Side Request Forgery — making a server fetch a URL of the requester's choosing, often an internal one.", lesson: "api-security" }
+    { term: "SSRF", def: "Server-Side Request Forgery — making a server fetch a URL of the requester's choosing, often an internal one.", lesson: "api-security" },
+    { term: "Session fixation", def: "Planting a known session ID before the victim logs in, so the attacker shares the authenticated session. Fixed by issuing a new ID at login.", lesson: "session-attacks" },
+    { term: "Open redirect", def: "A site that forwards users to any URL given in a parameter, lending its trusted domain to phishing links.", lesson: "session-attacks" },
+    { term: "Port scan", def: "Probing many network ports to see which services answer (open, closed or filtered). ATT&CK T1046.", lesson: "network-exposure" },
+    { term: "Attack surface", def: "Everything an outsider can reach and interact with: open ports, endpoints, inputs. Smaller is safer.", lesson: "network-exposure" },
+    { term: "Default deny", def: "A firewall or authorization policy that blocks everything not explicitly allowed.", lesson: "network-exposure" },
+    { term: "Secure code review", def: "Reading changes specifically for security flaws (authorization, injection, secrets) before they merge.", lesson: "secure-code-review" }
   ];
 
   const challenges = [
@@ -899,7 +1029,27 @@ window.BULWARK = (function () {
     { id: "samesite", cat: "Web", points: 10, title: "Stay on your side",
       prompt: "Which cookie attribute stops a session cookie riding along on cross-site POSTs?", placeholder: "attribute name",
       hint: "Its values are Strict, Lax and None.",
-      check: (a) => /^samesite(=(lax|strict))?$/i.test(a.trim()) }
+      check: (a) => /^samesite(=(lax|strict))?$/i.test(a.trim()) },
+    { id: "filtered", cat: "Networking", points: 10, title: "Silence is golden",
+      prompt: "A port probe gets no response at all because a firewall dropped it. What state does a scanner report? (one word)", placeholder: "state",
+      hint: "Not open, not closed…",
+      check: (a) => a.trim().toLowerCase() === "filtered" },
+    { id: "t1046", cat: "Detection", points: 15, title: "Name that technique",
+      prompt: "What is the MITRE ATT&CK technique ID for Network Service Discovery (port scanning)?", placeholder: "Txxxx",
+      hint: "It starts with T10.",
+      check: (a) => a.trim().toUpperCase() === "T1046" },
+    { id: "metaframe", cat: "Web", points: 20, title: "The ignored directive",
+      prompt: "Which CSP directive does nothing when the policy is set in a <meta> tag instead of an HTTP header? (it controls who may frame the page)", placeholder: "directive name",
+      hint: "Look at the clickjacking lesson.",
+      check: (a) => a.trim().toLowerCase() === "frame-ancestors" },
+    { id: "argon", cat: "Secrets", points: 10, title: "Pick the variant",
+      prompt: "Argon2 comes in three variants: Argon2d, Argon2i and Argon2__. Which letters complete the one OWASP recommends?", placeholder: "letters",
+      hint: "It combines the other two.",
+      check: (a) => /^(argon2)?id$/i.test(a.trim()) },
+    { id: "fixation", cat: "Web", points: 15, title: "Fresh start",
+      prompt: "To defeat session fixation, what must the server issue at the moment a user logs in? (two words)", placeholder: "…",
+      hint: "Out with the old ___ ___.",
+      check: (a) => /^(a )?new session( id)?$/i.test(a.trim()) || /^(fresh|new) (session )?id$/i.test(a.trim()) }
   ];
 
   return { eras, lessons, order, sources, glossary, challenges };

@@ -25,21 +25,23 @@ It is a **fully static site**: no backend, no build step, no runtime dependencie
 
 ## Current state — DONE
 
-**23 lessons across 7 eras** (the timeline spine). All render, all wired into `order`:
+**26 lessons across 7 eras** (the timeline spine). All render, all wired into `order`:
 
 - **Foundations:** classical ciphers; steganography
 - **Core concepts:** CIA triad; threat modeling (STRIDE)
 - **Live cryptography:** hashing; public-key (Diffie–Hellman, ECC, RSA); TLS 1.3 handshake + certificate chain
 - **Applied security:** injection (SQLi, command injection, XSS); OWASP Top 10 (2025); authentication/passwords; tokens & OAuth; securing AI systems (OWASP LLM Top 10); software supply chain (A03)
 - **Applied (added 2026-10-18):** CSRF + SameSite and clickjacking (step-by-step walkthroughs); storing secrets (password hashing, envelope encryption/KMS/HSM, secret managers, rotation, git, client-side)
-- **API security (new era 05):** OWASP API Top 10 overview with gateway control board; automated/AI pentesters (Shannon) used on your own staging
+- **Applied (also):** session fixation + open redirects (walkthroughs)
+- **API security (new era 05):** OWASP API Top 10 overview with gateway control board; secure code review (6 snippets); automated/AI pentesters (Shannon) used on your own staging
+- **Detection (also):** port scanning and attack surface (defender's view)
 - **Detection & response:** availability/DDoS (+ rate limiting); detection & response (ATT&CK, incident loop)
 - **Frontier:** post-quantum cryptography; quantum key distribution (BB84); zero trust & confidential computing
 
-**32 interactive widgets** (all in `js/widgets/`, registered on `window.BulwarkWidgets`):
-cipher (+ frequency-analysis break), hash avalanche (real Web Crypto SHA-256), sqli, cmdi, xss (sandboxed iframe), cspbuilder, ddos amplification, ratelimit (token bucket), diffie-hellman, eccurve (canvas), tls stepper, tlsbytes (byte-level ClientHello), certchain, owasp accordion, entropy, pqc toggle, threatmodel canvas, attack (ATT&CK matrix), jwt (real HMAC verify), oauth/PKCE, promptinject (simulated), bb84 (QKD), quiz, heroanim, challenge (CTF), stego (LSB image), depgraph (supply chain), walkthrough (data-driven attack→defense story), apidefense (API control board), kdf (live PBKDF2 timing), envelope (real AES-GCM + AES-KW with KEK rotation), secretscan (pre-commit scanner).
+**34 interactive widgets** (all in `js/widgets/`, registered on `window.BulwarkWidgets`):
+cipher (+ frequency-analysis break), hash avalanche (real Web Crypto SHA-256), sqli, cmdi, xss (sandboxed iframe), cspbuilder, ddos amplification, ratelimit (token bucket), diffie-hellman, eccurve (canvas), tls stepper, tlsbytes (byte-level ClientHello), certchain, owasp accordion, entropy, pqc toggle, threatmodel canvas, attack (ATT&CK matrix), jwt (real HMAC verify), oauth/PKCE, promptinject (simulated), bb84 (QKD), quiz, heroanim, challenge (CTF), stego (LSB image), depgraph (supply chain), walkthrough (data-driven attack→defense story), apidefense (API control board), kdf (live PBKDF2 timing), envelope (real AES-GCM + AES-KW with KEK rotation), secretscan (pre-commit scanner), codereview (click the flawed line, pick the fix), exposure (port-scan outside view + firewall log).
 
-**Platform features:** hash-router SPA; home timeline with progress bar + lesson search; **Challenges** page (8 scored CTF puzzles, progress saved in `localStorage`) + "keep practicing" links; searchable **Glossary** (30+ terms); **Sources** page (cited, dated); **Labs** page; animated hero; light/dark theme with system + manual toggle.
+**Platform features:** hash-router SPA; home **learning-path map** (per-era columns, visited/next state, Continue button) + timeline with progress bar + lesson search; **Challenges** page (17 scored CTF puzzles, progress saved in `localStorage`) + "keep practicing" links; searchable **Glossary** (30+ terms); **Sources** page (cited, dated); **Labs** page; animated hero; light/dark theme with system + manual toggle.
 
 **Quality gates (both green):**
 - `node --test` → **17/17** worked-example tests in `tests/crypto.test.mjs` (ciphers, SHA-256, RSA, Diffie–Hellman, EC point addition over F₁₇, entropy, TLS byte-layout, JWT tamper, BB84 QBER, RFC 7914 PBKDF2/scrypt vectors, envelope-encryption rotation).
@@ -52,13 +54,10 @@ cipher (+ frequency-analysis break), hash avalanche (real Web Crypto SHA-256), s
 ## NOT done yet (the backlog, roughly prioritized)
 
 **Still fits in the static site (easy wins, same patterns):**
-- Secure-code-review exercise (show a snippet, pick the bug + the fix)
-- More walkthroughs: the `walkthrough` widget is pure data — add `{attack:[…], defend:[…]}` to a lesson (path traversal, open redirect, session fixation are natural next ones)
+- More walkthroughs: the `walkthrough` widget is pure data — add `{attack:[…], defend:[…]}` to a lesson (path traversal and XXE are natural next ones)
 - Per-category API lessons (BOLA, mass assignment, SSRF) building on `apidefense`
-- Network/packet or port-scanning *concepts* visualizer (defensive framing)
 - Certificate-transparency / HSTS lesson
-- More CTF challenges; per-lesson "last verified" badges surfaced in the UI
-- A real learning-path map graphic on the home page (currently an SVG in `docs/assets/`)
+- Per-lesson "last verified" badges surfaced in the UI
 
 **Needs a real host — cannot live in a static site (milestones 3–4 of the original brief):**
 - The **containerized lab runner**: the truly sandboxed, runnable vulnerable targets described in `docs/LABS.md` (SQLi/XSS/path-traversal/SSRF labs, memory-safety labs under a sanitizer, DDoS simulate-then-mitigate). Needs OS-level isolation (container/namespace/seccomp), so it requires a backend or a desktop app.

@@ -42,6 +42,7 @@ This repository is **milestone 1** of the [roadmap](#roadmap): the timeline spin
 | Widgets: live PBKDF2 cost timer, real Web Crypto envelope encryption with KEK rotation, pre-commit secret scanner | ✅ Built |
 | Hacksplaining-style step-by-step **walkthroughs**: CSRF + SameSite, clickjacking + frame-ancestors | ✅ Built |
 | **API security** era: OWASP API Top 10 (2023) with an in-page API gateway control board; testing your own app with automated/AI pentesters | ✅ Built |
+| Secure **code review** exercise, port-scanning **exposure** visualizer, session fixation + open redirect walkthroughs, home **learning-path map**, 17 CTF challenges | ✅ Built |
 | CI: SHA-pinned Actions, CodeQL, gitleaks, weekly link check, Dependabot, render smoke test | ✅ Built |
 | Sandboxed container lab runner, downloadable desktop app | ⏭️ Later milestones |
 
@@ -88,6 +89,8 @@ js/
     kdf.js            # fast hash vs. slow salted KDF, timed live
     envelope.js       # envelope encryption + KEK rotation (Web Crypto)
     secretscan.js     # toy pre-commit secret scanner
+    codereview.js     # spot the flawed line, pick the fix
+    exposure.js       # what a port scan would see + firewall log
     threatmodel.js    # trust-boundary canvas (STRIDE)
     attack.js         # MITRE ATT&CK explorer (teaching subset)
     tlsbytes.js       # byte-level annotated ClientHello
